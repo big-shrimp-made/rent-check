@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO & Open Graph (OG) -->
+    <title>RentShield | Защита от дикого рынка аренды</title>
+    <meta name="description" content="Калькулятор реальной стоимости аренды. Узнай, сколько ты переплатишь за скрытые комиссии, залоги и штрафную коммуналку.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RentShield | Защита от дикого рынка аренды">
+    <meta property="og:description" content="Снимай розовые очки, а не убитые квартиры. Считаем реальный кэш на въезд без иллюзий.">
+    <!-- ВАЖНО: Замени ссылку ниже на реальный URL картинки для превью в Telegram/TikTok -->
+    <meta property="og:image" content="https://твоя-ссылка.com/og-cover.jpg"> 
+    <meta property="og:url" content="https://твоя-ссылка.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #09090b;
+            --bg-card: #18181b;
+            --accent-primary: #ec4899;
+            --accent-secondary: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #a1a1aa;
+            --gradient-text: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.2;
+        }
+
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .gradient-text {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* Header / Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 100vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(9, 9, 11, 0) 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            margin-bottom: 24px;
+            word-wrap: break-word;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        /* Generic Card Style */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Calculator Section */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .checkbox-wrap {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrap input {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            margin-top: 2px;
+            accent-color: var(--accent-primary);
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrap span {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .results {
+            background: linear-gradient(180deg, rgba(24, 24, 27, 0.8) 0%, rgba(9, 9, 11, 0.9) 100%);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            border-top: 4px solid var(--accent-primary);
+            width: 100%;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            color: var(--accent-primary);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Check-list Section */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .check-item {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        .check-item h3 { margin-bottom: 8px; font-size: 1.2rem; }
+        .check-item p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Red Flags Section */
+        .flags-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .flag-row {
+            display: flex;
+            gap: 24px;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 32px;
+            border-radius: var(--radius-md);
+            align-items: flex-start;
+        }
+
+        .flag-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        /* Deposit Section */
+        .deposit-section {
+            text-align: center;
+        }
+        
+        .deposit-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .step-list {
+            margin-top: 30px;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 24px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background: var(--gradient-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Sources Section */
+        .sources-grid {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        .source-tag {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        /* Footer CTA */
+        .cta-section {
+            text-align: center;
+            padding: 100px 20px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, rgba(9, 9, 11, 1) 100%);
+            width: 100%;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--gradient-text);
+            color: #fff;
+            padding: 18px 36px;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-top: 30px;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.5);
+        }
+
+        h2 { font-size: clamp(2rem, 5vw, 2.5rem); margin-bottom: 16px; }
+        .section-desc { color: var(--text-muted); font-size: clamp(1rem, 3vw, 1.1rem); margin-bottom: 40px; }
+
+        /* Бетонные медиазапросы для мобильных устройств */
+        @media (max-width: 768px) {
+            section { padding: 60px 15px; }
+            .hero { padding: 80px 15px; min-height: 80vh; }
+            .glass-card { padding: 24px; }
+            .calc-grid { grid-template-columns: 1fr; gap: 32px; }
+            .flag-row { flex-direction: column; align-items: center; text-align: center; padding: 24px; }
+            .flag-icon { margin-bottom: 12px; }
+            .step { flex-direction: column; align-items: center; text-align: center; }
+            .step-number { margin-right: 0; margin-bottom: 16px; }
+            .result-row, .total-row { flex-direction: column; align-items: flex-start; }
+            .result-row span:last-child, .total-row span:last-child { margin-top: 4px; }
+        }
+
+        @media (max-width: 480px) {
+            .btn-primary { padding: 16px 24px; font-size: 0.95rem; }
+            .sources-grid { gap: 10px; }
+            .source-tag { padding: 8px 16px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="hero">
+        <h1>Снимай розовые очки,<br>а не <span class="gradient-text">убитые квартиры</span>.</h1>
+        <p>Рынок аренды СНГ — это дикий запад. Тебя воспринимают как банкомат. Используй этот инструмент, чтобы увидеть реальную стоимость входа и отсечь токсичных арендодателей до передачи денег.</p>
+    </header>
+
+    <!-- Основной контент -->
+    <main>
+        <!-- 1. Entry Calculator Section -->
+        <section id="calculator">
+            <h2>Стресс-тест <span class="gradient-text">бюджета</span></h2>
+            <p class="section-desc">Забудь про цифру в объявлении. Считаем реальный кэш, который улетит в первые 24 часа.</p>
+            
+            <div class="glass-card calc-grid">
+                <div class="calc-inputs">
+                    <div class="input-group">
+                        <!-- a11y: жесткая привязка label к input -->
+                        <label for="baseRent">Заявленная аренда (в месяц, USD/EUR/BYN)</label>
+                        <input type="number" id="baseRent" placeholder="Введите сумму..." oninput="calculate()">
+                    </div>
+
+                    <label class="checkbox-wrap" for="agencyFee">
+                        <input type="checkbox" id="agencyFee" onchange="calculate()">
+                        <span>Квартира от агентства (комиссия ~50%)</span>
+                    </label>
+                    
+                    <label class="checkbox-wrap" for="deposit">
+                        <input type="checkbox" id="deposit" checked onchange="calculate()">
+                        <span>Страховой депозит (жесткая заморозка 1 мес.)</span>
+                    </label>
+
+                    <label class="checkbox-wrap" for="noRegistration">
+                        <input type="checkbox" id="noRegistration" onchange="calculate()">
+                        <span>Никто не прописан (Штрафная коммуналка х3-х5)</span>
+                    </label>
+                </div>
+
+                <div class="results">
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Аренда (первый месяц):</span>
+                        <span id="resBase" style="font-weight: 600;">0</span>
+                    </div>
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Заморозка (депозит):</span>
+                        <span id="resDeposit" style="font-weight: 600;">0</span>
+                    </div>
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Убыток на комиссию:</span>
+                        <span id="resAgency" style="font-weight: 600;">0</span>
+                    </div>
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Резерв на коммуналку:</span>
+                        <span id="resUtility" style="font-weight: 600;">0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Итого на старт:</span>
+                        <span id="resTotal">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Checklist Section -->
+        <section id="checklist">
+            <h2>Аудит за <span class="gradient-text">15 минут</span></h2>
+            <p class="section-desc">Не смотри на шторы. Смотри на коммуникации и документы. Базовый чек-лист на просмотре.</p>
+            
+            <div class="checklist-grid">
+                <div class="check-item">
+                    <h3>💧 Напор и трубы</h3>
+                    <p>Включи воду везде одновременно. Проверь сливной бачок. Загляни под раковину с фонариком — ищи следы сухой плесени.</p>
+                </div>
+                <div class="check-item">
+                    <h3>⚡ Розетки и щиток</h3>
+                    <p>Возьми зарядку. Проверь каждую розетку. Посмотри в щиток: если там советские черные пробки — проводка не вытянет твой ПК и кондиционер.</p>
+                </div>
+                <div class="check-item">
+                    <h3>📜 Документы</h3>
+                    <p>Требуй свидетельство о собственности и паспорт. Имя должно совпадать. Никаких «я брат жены хозяина, он разрешил».</p>
+                </div>
+                <div class="check-item">
+                    <h3>🪟 Вентиляция</h3>
+                    <p>Приложи лист бумаги к вытяжке в ванной и на кухне. Если не прилипает — зимой квартира превратится в парник с грибком.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Red Flags Section -->
+        <section id="red-flags">
+            <h2>Красные <span class="gradient-text">флаги</span></h2>
+            <p class="section-desc">Паттерны поведения арендодателей, при которых нужно молча разворачиваться и уходить.</p>
+            
+            <div class="flags-container">
+                <div class="flag-row glass-card">
+                    <div class="flag-icon">🚩</div>
+                    <div>
+                        <h3>«Договор подпишем потом, пока живите так»</h3>
+                        <p style="color: var(--text-muted); margin-top: 8px;">Тебя готовят к нелегальной сдаче. Тебя могут выселить завтра без возврата денег, или шантажировать повышением цены через месяц.</p>
+                    </div>
+                </div>
+                <div class="flag-row glass-card">
+                    <div class="flag-icon">🚩</div>
+                    <div>
+                        <h3>«Буду заходить раз в месяц поливать цветы»</h3>
+                        <p style="color: var(--text-muted); margin-top: 8px;">Жесткое нарушение приватности. Квартира сдана — это твоя неприкосновенная территория. Любой визит только по согласованию за сутки.</p>
+                    </div>
+                </div>
+                <div class="flag-row glass-card">
+                    <div class="flag-icon">🚩</div>
+                    <div>
+                        <h3>«Информационные услуги» перед показом</h3>
+                        <p style="color: var(--text-muted); margin-top: 8px;">Классический скам. Тебе предлагают купить базу номеров или заплатить за выезд агента до подписания договора найма. Это мошенники.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Move Out & Deposit Section -->
+        <section id="deposit-survival" class="deposit-section">
+            <h2>Битва за <span class="gradient-text">залог</span></h2>
+            <p class="section-desc">Как не подарить свои деньги хозяину при выезде из-за микроцарапины на обоях.</p>
+            
+            <div class="glass-card deposit-content">
+                <div class="step-list">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Тотальная фотофиксация при въезде</h3>
+                            <p style="color: var(--text-muted);">Снимай непрерывное видео. Каждый скол на плинтусе, каждое пятно на диване, трещины на плитке. Отправь это видео хозяину в Telegram в день заезда, чтобы зафиксировать дату.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Детальный акт приема-передачи</h3>
+                            <p style="color: var(--text-muted);">Фраза «квартира в удовлетворительном состоянии» — это приговор. Вписывай марку техники, наличие потертостей и переписывай показания всех счетчиков.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Понятие «естественный износ»</h3>
+                            <p style="color: var(--text-muted);">Амортизация ремонта входит в стоимость аренды. Если через год краска на стене стала менее яркой — это проблема хозяина. Залог удерживается только за откровенный вандализм.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <section id="sources" style="text-align: center; padding-top: 40px; padding-bottom: 20px;">
+            <h2 style="font-size: 1.5rem; color: var(--text-muted);">База данных паттернов</h2>
+            <p style="font-size: 0.9rem; color: #71717a;">Собрано на основе слез и потерянных денег арендаторов СНГ</p>
+            <div class="sources-grid">
+                <div class="source-tag">Форумы Onliner.by</div>
+                <div class="source-tag">Аналитика Realt.by</div>
+                <div class="source-tag">Кейсы Dev.by</div>
+                <div class="source-tag">Отзывы TikTok & Telegram</div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Нужна жесткая аналитика без воды?</h2>
+            <p class="section-desc">Деконструирую быт, финансы и медиа на базе сухой статистики.</p>
+            <a href="#" class="btn-primary">Перейти в Telegram-канал</a>
+        </section>
+    </footer>
+
+    <script>
+        function calculate() {
+            const baseRent = parseFloat(document.getElementById('baseRent').value) || 0;
+            const hasAgency = document.getElementById('agencyFee').checked;
+            const hasDeposit = document.getElementById('deposit').checked;
+            const noReg = document.getElementById('noRegistration').checked;
+
+            const agencyCost = hasAgency ? baseRent * 0.5 : 0; 
+            const depositCost = hasDeposit ? baseRent : 0;
+            const utilityRisk = noReg ? baseRent * 0.25 : 0; 
+
+            const totalCashNeeded = baseRent + depositCost + agencyCost + utilityRisk;
+
+            animateValue("resBase", parseFloat(document.getElementById("resBase").innerText.replace(/\s/g, '')) || 0, baseRent, 300);
+            animateValue("resDeposit", parseFloat(document.getElementById("resDeposit").innerText.replace(/\s/g, '')) || 0, depositCost, 300);
+            animateValue("resAgency", parseFloat(document.getElementById("resAgency").innerText.replace(/\s/g, '')) || 0, agencyCost, 300);
+            animateValue("resUtility", parseFloat(document.getElementById("resUtility").innerText.replace(/\s/g, '')) || 0, utilityRisk, 300);
+            animateValue("resTotal", parseFloat(document.getElementById("resTotal").innerText.replace(/\s/g, '')) || 0, totalCashNeeded, 500);
+        }
+
+        function animateValue(id, start, end, duration) {
+            if (start === end) return;
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
